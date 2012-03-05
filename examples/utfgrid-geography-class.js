@@ -25,7 +25,7 @@ var map = new OpenLayers.Map({
                 enableKinetic: true
             }
         }),
-        new OpenLayers.Control.ZoomPanel()
+        new OpenLayers.Control.Zoom()
     ],
     center: [0, 0],
     zoom: 1
