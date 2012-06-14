@@ -1,4 +1,7 @@
-// base object constructor
+/**
+ * @requires os/global.js
+ */
+
 ol.Base = ol.Class(Object, {
     initialize: function(config) {
         this.config = config = ol.extend({}, config);

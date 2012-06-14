@@ -23,6 +23,7 @@ describe("ol.Map", function() {
         center = map.center();
         expect(center[0]).toBe(-110);
         expect(center[1]).toBe(45);
+        expect(center instanceof ol.Location).toBe(true);
         
         // one step
         map = new ol.Map({center: [-111, 46]});
@@ -30,6 +31,17 @@ describe("ol.Map", function() {
         center = map.center();
         expect(center[0]).toBe(-111);
         expect(center[1]).toBe(46);
+        expect(center instanceof ol.Location).toBe(true);
+        
+        // more verbose
+        map = new ol.Map({
+            center: new ol.Location({x: -112, y: 47})
+        });
+        
+        center = map.center();
+        expect(center[0]).toBe(-112);
+        expect(center[1]).toBe(47);
+        expect(center instanceof ol.Location).toBe(true);
         
     });
     

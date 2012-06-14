@@ -55,7 +55,12 @@
             };
             Type.prototype = prototype;
             return Type;
+        },
+        
+        isArray: function(obj) {
+            return (Object.prototype.toString.call(obj) === "[object Array]");
         }
+        
     };
 
     
