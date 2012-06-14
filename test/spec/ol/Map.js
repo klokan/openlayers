@@ -21,16 +21,16 @@ describe("ol.Map", function() {
         map.center([-110, 45]);
         
         center = map.center();
-        expect(center[0].toFixed(3)).toBe("-110.000");
-        expect(center[1].toFixed(3)).toBe("45.000");
+        expect(center.x().toFixed(3)).toBe("-110.000");
+        expect(center.y().toFixed(3)).toBe("45.000");
         expect(center instanceof ol.Location).toBe(true);
         
         // one step
         map = new ol.Map({center: [-111, 46]});
 
         center = map.center();
-        expect(center[0].toFixed(3)).toBe("-111.000");
-        expect(center[1].toFixed(3)).toBe("46.000");
+        expect(center.x().toFixed(3)).toBe("-111.000");
+        expect(center.y().toFixed(3)).toBe("46.000");
         expect(center instanceof ol.Location).toBe(true);
         
         // more verbose
@@ -39,8 +39,8 @@ describe("ol.Map", function() {
         });
         
         center = map.center();
-        expect(center[0].toFixed(3)).toBe("-112.000");
-        expect(center[1].toFixed(3)).toBe("47.000");
+        expect(center.x().toFixed(3)).toBe("-112.000");
+        expect(center.y().toFixed(3)).toBe("47.000");
         expect(center instanceof ol.Location).toBe(true);
         
     });
@@ -53,8 +53,8 @@ describe("ol.Map", function() {
 
         center = map.center();
         zoom = map.zoom();
-        expect(center[0].toFixed(3)).toBe("1.000");
-        expect(center[1].toFixed(3)).toBe("2.000");
+        expect(center.x().toFixed(3)).toBe("1.000");
+        expect(center.y().toFixed(3)).toBe("2.000");
         expect(zoom).toBe(3);
         
         // all at once
@@ -65,8 +65,8 @@ describe("ol.Map", function() {
 
         center = map.center();
         zoom = map.zoom();
-        expect(center[0].toFixed(3)).toBe("4.000");
-        expect(center[1].toFixed(3)).toBe("5.000");
+        expect(center.x().toFixed(3)).toBe("4.000");
+        expect(center.y().toFixed(3)).toBe("5.000");
         expect(zoom).toBe(6);
         
     });
