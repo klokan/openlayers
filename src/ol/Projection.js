@@ -4,12 +4,12 @@
  * full text of the license. */
 
 /**
- * @requires OpenLayers/BaseTypes/Class.js
- * @requires OpenLayers/Util.js
+ * @requires ol/global.js
+ * @requires ol/Base.js
  */
 
 /**
- * Namespace: OpenLayers.Projection
+ * Namespace: ol.Projection
  * Methods for coordinate transforms between coordinate systems.  By default,
  *     OpenLayers ships with the ability to transform coordinates between
  *     geographic (EPSG:4326) and web or spherical mercator (EPSG:900913 et al.)
@@ -25,7 +25,7 @@
  *     between arbitrary coordinate reference systems, use the <addTransform>
  *     method to register a custom transform method.
  */
-OpenLayers.Projection = OpenLayers.Class({
+ol.Projection = ol.Class(ol.Base, {
 
     /**
      * Property: proj
@@ -46,59 +46,61 @@ OpenLayers.Projection = OpenLayers.Class({
     titleRegEx: /\+title=[^\+]*/,
 
     /**
-     * Constructor: OpenLayers.Projection
+     * Constructor: ol.Projection
      * This class offers several methods for interacting with a wrapped 
      *     pro4js projection object. 
      *
-     * Parameters:
-     * projCode - {String} A string identifying the Well Known Identifier for
+     * Configuration properties:
+     * code - {String} A string identifying the Well Known Identifier for
      *    the projection.
      * options - {Object} An optional object to set additional properties
      *     on the projection.
      *
      * Returns:
-     * {<OpenLayers.Projection>} A projection object.
+     * {<ol.Projection>} A projection object.
      */
-    initialize: function(projCode, options) {
-        OpenLayers.Util.extend(this, options);
-        this.projCode = projCode;
-        if (window.Proj4js) {
+    initialize: function(config) {
+        if (typeof config === "string") {
+            config = {code: config};
+        }
+        ol.Base.prototype.initialize.call(this, config);
+        if ("Proj4js" in ol.global) {
             this.proj = new Proj4js.Proj(projCode);
         }
     },
     
     /**
-     * APIMethod: getCode
+     * APIMethod: code
      * Get the string SRS code.
      *
      * Returns:
      * {String} The SRS code.
      */
-    getCode: function() {
-        return this.proj ? this.proj.srsCode : this.projCode;
+    code: function() {
+        return this.proj ? this.proj.srsCode : this.config.code;
     },
    
     /**
-     * APIMethod: getUnits
+     * APIMethod: units
      * Get the units string for the projection -- returns null if 
      *     proj4js is not available.
      *
      * Returns:
      * {String} The units abbreviation.
      */
-    getUnits: function() {
+    units: function() {
         return this.proj ? this.proj.units : null;
     },
 
     /**
      * Method: toString
-     * Convert projection to string (getCode wrapper).
+     * Convert projection to string (code wrapper).
      *
      * Returns:
      * {String} The projection code.
      */
     toString: function() {
-        return this.getCode();
+        return this.code();
     },
 
     /**
@@ -112,18 +114,18 @@ OpenLayers.Projection = OpenLayers.Class({
     equals: function(projection) {
         var p = projection, equals = false;
         if (p) {
-            if (!(p instanceof OpenLayers.Projection)) {
-                p = new OpenLayers.Projection(p);
+            if (!(p instanceof ol.Projection)) {
+                p = new ol.Projection(p);
             }
-            if (window.Proj4js && this.proj.defData && p.proj.defData) {
+            if (("Proj4js" in ol.global) && this.proj.defData && p.proj.defData) {
                 equals = this.proj.defData.replace(this.titleRegEx, "") ==
                     p.proj.defData.replace(this.titleRegEx, "");
-            } else if (p.getCode) {
-                var source = this.getCode(), target = p.getCode();
+            } else if (p.code) {
+                var source = this.code(), target = p.code();
                 equals = source == target ||
-                    !!OpenLayers.Projection.transforms[source] &&
-                    OpenLayers.Projection.transforms[source][target] ===
-                        OpenLayers.Projection.nullTransform;
+                    !!ol.Projection.transforms[source] &&
+                    ol.Projection.transforms[source][target] ===
+                        ol.Projection.nullTransform;
             }
         }
         return equals;   
@@ -137,7 +139,7 @@ OpenLayers.Projection = OpenLayers.Class({
         delete this.projCode;
     },
     
-    CLASS_NAME: "OpenLayers.Projection" 
+    CLASS_NAME: "ol.Projection" 
 });     
 
 /**
@@ -147,7 +149,7 @@ OpenLayers.Projection = OpenLayers.Class({
  * requiring support for proj4js to be included.
  *
  * This object has keys which correspond to a 'source' projection object.  The
- * keys should be strings, corresponding to the projection.getCode() value.
+ * keys should be strings, corresponding to the projection.code() value.
  * Each source projection object should have a set of destination projection
  * keys included in the object. 
  * 
@@ -160,7 +162,7 @@ OpenLayers.Projection = OpenLayers.Class({
  *     transform method to this object, use the <addTransform> method.  For an
  *     example of usage, see the OpenLayers.Layer.SphericalMercator file.
  */
-OpenLayers.Projection.transforms = {};
+ol.Projection.transforms = {};
 
 /**
  * APIProperty: defaults
@@ -170,7 +172,7 @@ OpenLayers.Projection.transforms = {};
  * maxExtent (the validity extent for the SRS) and yx (true if this SRS is
  * known to have a reverse axis order).
  */
-OpenLayers.Projection.defaults = {
+ol.Projection.defaults = {
     "EPSG:4326": {
         units: "degrees",
         maxExtent: [-180, -90, 180, 90],
@@ -199,17 +201,17 @@ OpenLayers.Projection.defaults = {
  *     transforms that point from the source to the destination projection
  *     in place.  The original point should be modified.
  */
-OpenLayers.Projection.addTransform = function(from, to, method) {
-    if (method === OpenLayers.Projection.nullTransform) {
-        var defaults = OpenLayers.Projection.defaults[from];
-        if (defaults && !OpenLayers.Projection.defaults[to]) {
-            OpenLayers.Projection.defaults[to] = defaults;
+ol.Projection.addTransform = function(from, to, method) {
+    if (method === ol.Projection.nullTransform) {
+        var defaults = ol.Projection.defaults[from];
+        if (defaults && !ol.Projection.defaults[to]) {
+            ol.Projection.defaults[to] = defaults;
         }
     }
-    if(!OpenLayers.Projection.transforms[from]) {
-        OpenLayers.Projection.transforms[from] = {};
+    if(!ol.Projection.transforms[from]) {
+        ol.Projection.transforms[from] = {};
     }
-    OpenLayers.Projection.transforms[from][to] = method;
+    ol.Projection.transforms[from][to] = method;
 };
 
 /**
@@ -220,26 +222,26 @@ OpenLayers.Projection.addTransform = function(from, to, method) {
  * Parameters:
  * point - {<OpenLayers.Geometry.Point> | Object} An object with x and y
  *     properties representing coordinates in those dimensions.
- * source - {OpenLayers.Projection} Source map coordinate system
- * dest - {OpenLayers.Projection} Destination map coordinate system
+ * source - {ol.Projection} Source map coordinate system
+ * dest - {ol.Projection} Destination map coordinate system
  *
  * Returns:
  * point - {object} A transformed coordinate.  The original point is modified.
  */
-OpenLayers.Projection.transform = function(point, source, dest) {
+ol.Projection.transform = function(point, source, dest) {
     if (source && dest) {
-        if (!(source instanceof OpenLayers.Projection)) {
-            source = new OpenLayers.Projection(source);
+        if (!(source instanceof ol.Projection)) {
+            source = new ol.Projection(source);
         }
-        if (!(dest instanceof OpenLayers.Projection)) {
-            dest = new OpenLayers.Projection(dest);
+        if (!(dest instanceof ol.Projection)) {
+            dest = new ol.Projection(dest);
         }
         if (source.proj && dest.proj) {
             point = Proj4js.transform(source.proj, dest.proj, point);
         } else {
-            var sourceCode = source.getCode();
-            var destCode = dest.getCode();
-            var transforms = OpenLayers.Projection.transforms;
+            var sourceCode = source.code();
+            var destCode = dest.code();
+            var transforms = ol.Projection.transforms;
             if (transforms[sourceCode] && transforms[sourceCode][destCode]) {
                 transforms[sourceCode][destCode](point);
             }
@@ -254,13 +256,13 @@ OpenLayers.Projection.transform = function(point, source, dest) {
  * proj4js is not available:
  *
  * (code)
- * OpenLayers.Projection.addTransform("EPSG:3857", "EPSG:900913",
- *     OpenLayers.Projection.nullTransform);
- * OpenLayers.Projection.addTransform("EPSG:900913", "EPSG:3857",
- *     OpenLayers.Projection.nullTransform);
+ * ol.Projection.addTransform("EPSG:3857", "EPSG:900913",
+ *     ol.Projection.nullTransform);
+ * ol.Projection.addTransform("EPSG:900913", "EPSG:3857",
+ *     ol.Projection.nullTransform);
  * (end)
  */
-OpenLayers.Projection.nullTransform = function(point) {
+ol.Projection.nullTransform = function(point) {
     return point;
 };
 
@@ -292,8 +294,8 @@ OpenLayers.Projection.nullTransform = function(point) {
     }
 
     function map(base, codes) {
-        var add = OpenLayers.Projection.addTransform;
-        var same = OpenLayers.Projection.nullTransform;
+        var add = ol.Projection.addTransform;
+        var same = ol.Projection.nullTransform;
         var i, len, code, other, j;
         for (i=0, len=codes.length; i<len; ++i) {
             code = codes[i];
