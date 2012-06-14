@@ -64,21 +64,37 @@ describe("ol.Location", function() {
 
     });
     
-    it("has a projection", function() {
-        var loc, proj;
+    it("has no default projection", function() {
+
+        var loc = new ol.Location({x: 1, y: 2});
         
-        // default
-        loc = new ol.Location();
+        expect(loc.projection()).toBeUndefined();
+        
+    });
+    
+    it("allows projection to be set", function() {
+        var proj;
+
+        // at construction
+        var loc = new ol.Location({x: 1, y: 2, projection: "EPSG:4326"});
+
         proj = loc.projection();
-        
         expect(proj instanceof ol.Projection).toBe(true);
         expect(proj.code()).toBe("EPSG:4326");
         
+        // after construction
+        loc.projection("EPSG:900913");
+        expect(loc.projection().code()).toBe("EPSG:900913");
+        
+        // setting projection does not transform coordinates
+        expect(loc.x()).toBe(1);
+        expect(loc.y()).toBe(2);
+
     });
     
     it("can be transformed (to mercator)", function() {
 
-        var loc = new ol.Location([10, 20]);
+        var loc = new ol.Location({x: 10, y: 20, projection: "EPSG:4326"});
         var trans = loc.transform("EPSG:900913");
         
         expect(trans instanceof ol.Location).toBe(true);

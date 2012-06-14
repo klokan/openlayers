@@ -5,10 +5,6 @@
 
 ol.Location = ol.Class(ol.Base, {
 
-    defaults: {
-        projection: "EPSG:4326"
-    },
-    
     initialize: function(config) {
         if (ol.isArray(config)) {
             config = {
@@ -45,9 +41,6 @@ ol.Location = ol.Class(ol.Base, {
     
     projection: function(proj) {
         if (arguments.length === 0) {
-            if (!("projection" in this.config)) {
-                this.projection(this.defaults.projection);
-            }
             return this.config.projection;
         }
         if (!(proj instanceof ol.Projection)) {
