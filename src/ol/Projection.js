@@ -89,7 +89,7 @@ ol.Projection = ol.Class(ol.Base, {
      * {String} The units abbreviation.
      */
     units: function() {
-        return this.proj ? this.proj.units : null;
+        return this.proj ? this.proj.units : this.config.units;
     },
 
     /**
