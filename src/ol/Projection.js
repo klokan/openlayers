@@ -216,19 +216,21 @@ ol.Projection.addTransform = function(from, to, method) {
 
 /**
  * APIMethod: transform
- * Transform a point coordinate from one projection to another.  Note that
- *     the input point is transformed in place.
+ * Transform a point coordinate from one projection to another.  Returns a
+ *     new object with x and y properties representing the transformed 
+ *     coordinates.
  * 
  * Parameters:
- * point - {<OpenLayers.Geometry.Point> | Object} An object with x and y
- *     properties representing coordinates in those dimensions.
+ * point - {Object} An object with x and y properties representing coordinates 
+ *     in those dimensions.
  * source - {ol.Projection} Source map coordinate system
  * dest - {ol.Projection} Destination map coordinate system
  *
  * Returns:
- * point - {object} A transformed coordinate.  The original point is modified.
+ * {Object} A transformed coordinate.  The original point is not modified.
  */
 ol.Projection.transform = function(point, source, dest) {
+    point = {x: point.x, y: point.y, z: point.z};
     if (source && dest) {
         if (!(source instanceof ol.Projection)) {
             source = new ol.Projection(source);
