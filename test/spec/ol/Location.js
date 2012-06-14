@@ -64,6 +64,42 @@ describe("ol.Location", function() {
 
     });
     
+    it("has a projection", function() {
+        var loc, proj;
+        
+        // default
+        loc = new ol.Location();
+        proj = loc.projection();
+        
+        expect(proj instanceof ol.Projection).toBe(true);
+        expect(proj.code()).toBe("EPSG:4326");
+        
+    });
+    
+    it("can be transformed (to mercator)", function() {
+
+        var loc = new ol.Location([10, 20]);
+        var trans = loc.transform("EPSG:900913");
+        
+        expect(trans instanceof ol.Location).toBe(true);
+        expect(trans.projection().code()).toBe("EPSG:900913");
+        expect(trans.x().toFixed(3)).toBe("1113194.908");
+        expect(trans.y().toFixed(3)).toBe("2273030.927");
+        
+    });
+
+    it("can be transformed (to geographic)", function() {
+
+        var loc = new ol.Location({x: 1113195, y: 2273031, projection: "EPSG:900913"});
+        var trans = loc.transform("EPSG:4326");
+        
+        expect(trans instanceof ol.Location).toBe(true);
+        expect(trans.projection().code()).toBe("EPSG:4326");
+        expect(trans.x().toFixed(3)).toBe("10.000");
+        expect(trans.y().toFixed(3)).toBe("20.000");
+        
+    });
+    
     it("is destroyable", function() {
         
         var loc = new ol.Location([1, 2]);
