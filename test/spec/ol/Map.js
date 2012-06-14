@@ -45,7 +45,7 @@ describe("ol.Map", function() {
         
     });
     
-    it("should be easy to set center and zoom", function() {
+    it("allows flexible setting of center and zoom", function() {
         var map, center, zoom;
         
         // chained
@@ -71,7 +71,7 @@ describe("ol.Map", function() {
         
     });
     
-    it("should be obvious when you mess up", function() {
+    it("provides feedback when you mess up", function() {
         var map;
         
         // misspelling
@@ -83,7 +83,7 @@ describe("ol.Map", function() {
 
     });
     
-    it("should be easy to destroy a map", function() {
+    it("is destroyable", function() {
         
         var map = new ol.Map();
         map.center([1, 2]);
