@@ -10,6 +10,18 @@
       "valueOf"
     ];
     
+    function createGetSet(name) {
+        return function(value) {
+            if (arguments.length === 0) {
+                if (!(name in this.config) && this.defaults && (name in this.defaults)) {
+                    this[name](this.defaults[name]);
+                }
+                return this.config[name];
+            }
+            this.config[name] = value;
+            return this;
+        };
+    }
     
     global.ol = {
 
@@ -31,12 +43,25 @@
             }
             return to;
         },
-
+        
         Class: function(Parent, props) {
             var Shell = function() {};
             Shell.prototype = Parent.prototype;
-            var prototype = ol.extend(new Shell(), props);
+            var prototype = new Shell();
 
+            // add straight getter/setter methods
+            if (ol.isArray(props.properties)) {
+                var name;
+                for (var i=0, ii=props.properties.length; i<ii; ++i) {
+                    name = props.properties[i];
+                    prototype[name] = createGetSet(name);
+                }
+                delete props.properties;
+            }
+            
+            // add all remaining members
+            ol.extend(prototype, props);
+            
             var Type = function() {
                 // allow calling single argument contructors without 'new'
                 if (!(this instanceof Type)) {

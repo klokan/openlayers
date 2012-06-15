@@ -36,16 +36,6 @@ describe("ol.Location", function() {
 
     });
     
-    it("allows bracket notation for coordinate access", function() {
-
-        var loc = new ol.Location({x: 1.2, y: 2.3, z: 3.4});
-        
-        expect(loc[0]).toBe(1.2);
-        expect(loc[1]).toBe(2.3);
-        expect(loc[2]).toBe(3.4);
-
-    });
-    
     it("is mutable", function() {
         
         var loc = new ol.Location();
