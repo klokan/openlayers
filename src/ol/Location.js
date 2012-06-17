@@ -1,6 +1,6 @@
 /**
- * @requires ol/Base.js
- * @requires ol/Projection.js
+    @requires ol/Base.js
+    @requires ol/Projection.js
  */
 
 ol.Location = ol.Class(ol.Base, {
@@ -31,7 +31,7 @@ ol.Location = ol.Class(ol.Base, {
         if (!(to instanceof ol.Projection)) {
             to = new ol.Projection(to);
         }
-        loc = ol.Location(ol.Projection.transform(
+        var loc = ol.Location(ol.Projection.transform(
             {x: this.x(), y: this.y(), z: this.z()}, this.projection(), to
         ));
         return loc.projection(to.code());

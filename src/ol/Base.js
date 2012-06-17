@@ -1,8 +1,12 @@
 /**
- * @requires os/global.js
+    @requires os/global.js
  */
 
-ol.Base = ol.Class(Object, {
+ol.Base = ol.Class(Object, /** @lends ol.Base# */ {
+    
+    /**
+        @constructs ol.Base
+     */
     initialize: function(config) {
         this.config = config = ol.extend({}, config);
         var name, member;
@@ -15,6 +19,10 @@ ol.Base = ol.Class(Object, {
             }
         }
     },
+    
+    /**
+        Deletes all properties of this object.
+     */
     destroy: function() {
         for (var prop in this) {
             delete this[prop];

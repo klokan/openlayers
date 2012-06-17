@@ -1,3 +1,7 @@
+/** 
+    @namespace ol 
+ */
+
 (function(global) {
     
     var prototypeFields = [
@@ -22,11 +26,18 @@
             return this;
         };
     }
-    
-    global.ol = {
+
+    global.ol = /** @lends ol# **/ {
 
         global: global,
 
+        /**
+            Extend one object with properties from another.
+            
+            @arg to Object - Destination object
+            @arg from Object - Source object
+            @returns Object The modified destination object.
+         */
         extend: function(to, from) {
             to = to || {};
             from = from || {};
