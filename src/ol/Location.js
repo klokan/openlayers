@@ -3,10 +3,14 @@
     @requires ol/Projection.js
  */
 
-ol.Location = ol.Class(ol.Base, {
+ol.Location = ol.Class(ol.Base, /** @lends ol.Location# */{
     
     properties: ["x", "y", "z"],
 
+    /**
+        @constructs ol.Location
+        @param {Array.<number>|{{x:number,y:number,z:number=}}} config
+     */
     initialize: function(config) {
         if (ol.isArray(config)) {
             config = {
@@ -27,6 +31,10 @@ ol.Location = ol.Class(ol.Base, {
         return this;
     },
     
+    /**
+        @param {string|ol.Projection} to - Destination projection.
+        @returns {ol.Location}
+     */
     transform: function(to) {
         if (!(to instanceof ol.Projection)) {
             to = new ol.Projection(to);

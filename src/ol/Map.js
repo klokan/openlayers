@@ -12,7 +12,7 @@ ol.Map = ol.Class(ol.Base, /** @lends ol.Map# */ {
     
     /**
         @constructs ol.Map
-        @arg config Object - Map configuration object
+        @param config Object - Map configuration object
      */
     initialize: function(config) {
         ol.Base.prototype.initialize.call(this, config);
@@ -21,7 +21,7 @@ ol.Map = ol.Class(ol.Base, /** @lends ol.Map# */ {
     /**
         Get or set the map center.
         
-        @arg {ol.Location} loc - If provided, the map will be centered at this
+        @arg {Array.<number>|ol.Location} loc - If provided, the map will be centered at this
             location.
         @returns {ol.Location | ol.Map}  If no location is provided, the current
             map center will be returned.  If a location is provided, the map
@@ -84,7 +84,7 @@ ol.Map = ol.Class(ol.Base, /** @lends ol.Map# */ {
         Get or set the user projection.  The user projection is used to 
         transform coordinates when getting the map center or setting the center
         using a location without an explicitly set projection.
-        
+
         @arg {ol.Projection} proj - If provided, the user projection will be set
         @returns {ol.Projection | ol.Map}  If no projection is provided, the 
             current user projection will be returned.  If a projection is 
@@ -116,6 +116,7 @@ ol.Map = ol.Class(ol.Base, /** @lends ol.Map# */ {
         @returns {ol.Map} This map.
      */
     render: function(target) {
+        // this.rerender(...)
     },
     
     /**
@@ -123,12 +124,13 @@ ol.Map = ol.Class(ol.Base, /** @lends ol.Map# */ {
         
         Calls ol.Renderer#draw with the current extent, resolution, and layers.
         
-        @arg {Boolean} force - Force the renderer to fetch new data from the 
+        @param {boolean} force - Force the renderer to fetch new data from the 
             layers.
         @returns {ol.Map} This map.
         @private
      */
     rerender: function(force) {
+        // this.renderer.draw(...)
     }
     
 });
